@@ -1,0 +1,15 @@
+{
+  "name": "yarn-project-ci",
+  "version": "1.0.0",
+  "description": "a sample yarn project to test release versions",
+  "main": "index.js",
+  "repository": "https://github.com/jmunta-tlx/yarn-project-ci",
+  "author": "Jagadesh Munta",
+  "license": "Trustlogix",
+  "dependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "build": "yarn install"
+  }
+
+}

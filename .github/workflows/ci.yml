@@ -1,0 +1,44 @@
+name: yarn-project-ci CI flow
+
+on:
+  push:
+    branches: 
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  ci:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    - id: yarn-project-ci-ci
+      name: Tlx Continuous Integration
+      uses: jmunta-tlx/tlx-main@v9
+      with:
+        project-name: 'yarn-project-ci'
+        project-type: 'yarn'
+        project-artifact: yarn-project-ci
+        project-steps: all
+      env:
+          SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK}}
+          REPORT_NOTIFY: "slack#do_not_use_channel"
+          SLACK_TITLE: Auto CI trigger - ${{ github.event_name }} in ${{ github.repository }} ${{ github.ref }} <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}> by ${{ github.actor}}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: tlx-engine/yarn-project-ci-main
+         
