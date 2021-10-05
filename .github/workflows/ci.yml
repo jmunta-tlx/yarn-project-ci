@@ -26,7 +26,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
     - id: yarn-project-ci-ci
       name: Tlx Continuous Integration
-      uses: jmunta-tlx/tlx-main@v9
+      uses: jmunta-tlx/tlx-cicd@v9
       with:
         project-name: 'yarn-project-ci'
         project-type: 'yarn'
